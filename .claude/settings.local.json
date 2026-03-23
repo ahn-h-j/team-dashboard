@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/tkgkd/Desktop/Workspace/team-dashboard_sa-practice/backend/build/test-results/test/**)",
+      "Bash(cat \"C:/Users/tkgkd/Desktop/Workspace/team-dashboard_sa-practice/backend/build/test-results/test/\"*Unauthorized*)",
+      "Bash(cat C:/Users/tkgkd/Desktop/Workspace/team-dashboard_sa-practice/backend/build/test-results/test/*Validation*)",
+      "Bash(gradle test:*)",
+      "Bash(cat C:/Users/tkgkd/Desktop/Workspace/team-dashboard_sa-practice/backend/build/test-results/test/*TaskControllerTest*)"
+    ]
+  }
+}

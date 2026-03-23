@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Use this skill when the user wants to commit changes. Commits are split by layer (domain → infra → api) and frontend is committed separately.
+description: Use this skill when the user wants to commit changes. Backend and frontend are committed separately.
 disable-model-invocation: false
 allowed-tools: Bash, Read, Glob, Grep
 argument-hint: [커밋 메시지 힌트 (선택)]
@@ -12,7 +12,7 @@ $ARGUMENTS
 
 ## 필수 규칙
 
-1. **계층별 분리 커밋**: domain → infra → api 순서
+1. **계층별 분리 커밋**: entity → repository/service → controller 순서
 2. **프론트엔드 별도 커밋**: frontend/ 변경은 반드시 분리
 3. **Co-Authored-By 금지**
 
@@ -27,10 +27,12 @@ git diff --stat
 
 | 경로 패턴 | 계층 |
 |----------|------|
-| `*/domain/**` | domain |
-| `*/application/**` | application |
-| `*/adapter/out/**` | infra |
-| `*/adapter/in/**` | api |
+| `*/domain/*/entity/**` | entity |
+| `*/domain/*/repository/**` | repository |
+| `*/domain/*/service/**` | service |
+| `*/domain/*/controller/**` | controller |
+| `*/domain/*/dto/**` | dto |
+| `*/config/**`, `*/common/**`, `*/global/**` | config |
 | `frontend/**` | frontend |
 | `docs/**` | docs |
 | `**/test/**` | test |
@@ -38,17 +40,18 @@ git diff --stat
 ## Step 2: 커밋 순서
 
 1. docs (문서)
-2. domain (도메인 모델)
-3. infra (adapter/out - persistence)
-4. application (service, usecase)
-5. api (adapter/in - controller, dto)
-6. test (테스트)
-7. frontend (별도 커밋)
+2. config (설정, 공통)
+3. entity (엔티티, 도메인 모델)
+4. repository (데이터 접근)
+5. service (비즈니스 로직)
+6. dto + controller (API 계층)
+7. test (테스트)
+8. frontend (별도 커밋)
 
 ## Step 3: 커밋 메시지 형식
 
 ```
-<type>(<context>/<layer>): <subject>
+<type>(<context>): <subject>
 
 - 변경 내용 1
 - 변경 내용 2
@@ -63,17 +66,12 @@ git diff --stat
 - `chore`: 설정
 
 ### Context (비즈니스 도메인)
-- `identity`: User, 인증
-- `auction`: 경매
-- `bidding`: 입찰
-- `trade`: 거래
-- `support`: 알림
-
-### Layer
-- `domain`: 도메인 모델
-- `infra`: adapter/out (persistence, external)
-- `api`: adapter/in (controller, dto)
-- `application`: service, usecase
+- `user`: 사용자, 인증
+- `project`: 프로젝트 관리
+- `task`: 태스크, 칸반
+- `comment`: 코멘트
+- `dashboard`: 대시보드, 시각화
+- `config`: 설정, 공통
 
 ### Subject
 - 한글, 50자 이내, 마침표 없음, 명령문
@@ -86,10 +84,10 @@ git add <files>
 
 # 커밋 (HEREDOC)
 git commit -m "$(cat <<'EOF'
-feat(trade/domain): Trade 도메인 모델 구현
+feat(task): Task 엔티티 및 상태 관리 구현
 
-- Trade 엔티티 추가
-- TradeStatus enum 정의
+- Task 엔티티 추가
+- TaskStatus enum 정의
 EOF
 )"
 ```
@@ -99,20 +97,20 @@ EOF
 ```
 ## 커밋 완료
 
-1. `abc1234` feat(trade/domain): Trade 도메인 모델 구현
-2. `def5678` feat(trade/infra): Trade 영속성 어댑터 구현
-3. `ghi9012` feat(trade/api): Trade API 엔드포인트 구현
-4. `jkl3456` feat(trade): 거래 페이지 UI 구현 (frontend)
+1. `abc1234` feat(task): Task 엔티티 및 상태 관리 구현
+2. `def5678` feat(task): Task CRUD API 구현
+3. `ghi9012` feat(task): 칸반 보드 UI 구현 (frontend)
 
-총 4개 커밋
+총 3개 커밋
 ```
 
 ## 예시: 실제 커밋 히스토리
 
 ```
-feat(identity/domain): UserRole enum 및 User 도메인에 role 필드 추가
-feat(identity/infra): User role 영속성 계층 구현
-feat(identity/infra): JWT role 클레임 및 Spring Security 권한 검증 구현
-feat(identity/api): 관리자 API 엔드포인트 구현
-chore(config): ADMIN_EMAILS 환경변수 및 관리자 설정 추가
+feat(user): User 엔티티 및 역할 enum 추가
+feat(user): JWT 인증 및 Spring Security 설정 구현
+feat(project): 프로젝트 CRUD Service 구현
+feat(project): 프로젝트 API 엔드포인트 구현
+feat(dashboard): 대시보드 메인 페이지 UI 구현
+chore(config): 환경변수 및 DB 설정 추가
 ```

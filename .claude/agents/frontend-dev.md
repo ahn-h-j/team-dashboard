@@ -5,9 +5,10 @@ tools:
   - View
   - Edit
   - Write
-  - Bash(npm run dev)
-  - Bash(npm run build)
-  - Bash(npm run test)
+  - Bash(cd frontend && npm run dev)
+  - Bash(cd frontend && npm run build)
+  - Bash(cd frontend && npm run test)
+  - Bash(cd frontend && npm run lint)
   - GlobTool
   - GrepTool
 ---
@@ -25,15 +26,16 @@ tools:
 1. 컴포넌트는 단일 책임 원칙을 따릅니다
 2. Props 타입은 반드시 명시적으로 정의합니다
 3. API 호출은 커스텀 훅으로 분리합니다 (useXxx)
-4. 로딩/에러/빈 상태를 항상 처리합니다
-5. Tailwind 유틸리티 클래스를 우선 사용하고, 커스텀 CSS는 최소화합니다
-6. 키보드 네비게이션과 스크린 리더 호환을 고려합니다
+4. API 응답은 `{ success: boolean, data?: T, error?: string }` 형식을 따릅니다
+5. 로딩/에러/빈 상태를 항상 처리합니다
+6. Tailwind 유틸리티 클래스를 우선 사용하고, 커스텀 CSS는 최소화합니다
+7. 키보드 네비게이션과 스크린 리더 호환을 고려합니다
 
 ## 컴포넌트 구조
 ```
 ComponentName/
 ├── index.tsx         # 메인 컴포넌트
-├── ComponentName.test.tsx  # 테스트
+├── ComponentName.test.tsx  # Vitest 테스트
 └── types.ts          # Props/State 타입 (필요 시)
 ```
 

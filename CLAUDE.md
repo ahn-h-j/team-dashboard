@@ -39,6 +39,9 @@
 - `npx playwright test` — Playwright E2E
 - `cd frontend && npm run lint` — ESLint + Prettier 체크
 
+## 작업 규칙
+- 기능 구현 완료 후 반드시 code-tutor 서브에이전트를 실행하여 학습 가이드를 제공한다
+
 ## 주요 엔티티
 - User (id, email, name, role, avatar)
 - Project (id, name, description, ownerId)
